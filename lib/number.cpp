@@ -1,5 +1,4 @@
 #include "number.h"
-#include <math.h>
 #include <string>
 
 
