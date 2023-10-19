@@ -1,0 +1,21 @@
+# ninja log v5
+0	87	7188971240277922	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-mkdir	c675ce350d0e18
+0	87	7188971240277922	C:/Users/krasn/Desktop/lab_2/labwork2-squirtleKKS/cmake-build-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-mkdir	c675ce350d0e18
+88	5904	7188971298427158	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-download	55e1feebbc73e2f3
+88	5904	7188971298427158	C:/Users/krasn/Desktop/lab_2/labwork2-squirtleKKS/cmake-build-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-download	55e1feebbc73e2f3
+5905	6126	0	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-update	65ab35c00b83b7d1
+5905	6126	0	C:/Users/krasn/Desktop/lab_2/labwork2-squirtleKKS/cmake-build-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-update	65ab35c00b83b7d1
+6127	6229	7188971301657571	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-patch	ff376cbdee16054a
+6127	6229	7188971301657571	C:/Users/krasn/Desktop/lab_2/labwork2-squirtleKKS/cmake-build-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-patch	ff376cbdee16054a
+6229	6321	7188971302620778	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-configure	769492b2851aaa58
+6229	6321	7188971302620778	C:/Users/krasn/Desktop/lab_2/labwork2-squirtleKKS/cmake-build-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-configure	769492b2851aaa58
+6321	6388	7188971303281608	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-build	34ee2427b4b025d5
+6321	6388	7188971303281608	C:/Users/krasn/Desktop/lab_2/labwork2-squirtleKKS/cmake-build-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-build	34ee2427b4b025d5
+6389	6456	7188971303958565	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-install	39ff65d0db530119
+6389	6456	7188971303958565	C:/Users/krasn/Desktop/lab_2/labwork2-squirtleKKS/cmake-build-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-install	39ff65d0db530119
+6456	6524	7188971304644817	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-test	3043485dabe1675d
+6456	6524	7188971304644817	C:/Users/krasn/Desktop/lab_2/labwork2-squirtleKKS/cmake-build-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-test	3043485dabe1675d
+6525	6623	7188971305633073	CMakeFiles/googletest-populate-complete	178694911750385a
+6525	6623	7188971305633073	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-done	178694911750385a
+6525	6623	7188971305633073	C:/Users/krasn/Desktop/lab_2/labwork2-squirtleKKS/cmake-build-debug/_deps/googletest-subbuild/CMakeFiles/googletest-populate-complete	178694911750385a
+6525	6623	7188971305633073	C:/Users/krasn/Desktop/lab_2/labwork2-squirtleKKS/cmake-build-debug/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-done	178694911750385a
