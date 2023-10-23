@@ -2,16 +2,20 @@
 #include <string>
 
 
+bool IsNegative (uint8_t first_byte) {
+    return first_byte >= kNegativeValue;
+}
+
 int2023_t ReversedCode (int2023_t num){
     int2023_t result;
-    for (int i = 0; i < ArraySize; ++i) {
-        result.storage[i] = NumberSystem - num.storage[i] - 1;
+    for (int i = 0; i < kSize; ++i) {
+        result.bytes[i] = kNumberSystem - num.bytes[i] - 1;
     }
-    for (int i = ArraySize - 1; i > -1; --i) {
-        if (result.storage[i] + 1 > NumberSystem - 1) {
-            result.storage[i] = 0;
+    for (int i = kSize - 1; i > -1; --i) {
+        if (result.bytes[i] + 1 > kNumberSystem - 1) {
+            result.bytes[i] = 0;
         } else {
-            result.storage[i] += 1;
+            result.bytes[i] += 1;
             break;
         }
     }
@@ -21,9 +25,9 @@ int2023_t ReversedCode (int2023_t num){
 
 uint8_t BinToUint(short* byte){
     uint8_t result = 0;
-    for (short i = 0; i < ByteSize; ++i) {
+    for (short i = 0; i < kByteSize; ++i) {
         if (byte[i] == 1) {
-            result += ST[i];
+            result += kSt[i];
         }
     }
     return result;
@@ -32,24 +36,24 @@ uint8_t BinToUint(short* byte){
 int2023_t from_int(int32_t i) {
     int2023_t number;
     number.Fill();
-    short byte[ByteSize];
-    for (short x = 0; x < ByteSize; ++x) {
+    short byte[kByteSize];
+    for (short x = 0; x < kByteSize; ++x) {
         byte[x] = 0;
     }
     if (i < 0) {
-        number.storage[0] = NegativeValue;
+        number.bytes[0] = kNegativeValue;
         i = i * -1;
     }
-    short j = ArraySize - 1;
-    short cur_position = ByteSize-1;
+    short j = kSize - 1;
+    short cur_position = kByteSize-1;
     while (j > -1 and i > 0) {
         if (cur_position == -1) {
-            number.storage[j] += BinToUint(byte);
-            for (short x = 0; x < ByteSize; ++x) {
+            number.bytes[j] += BinToUint(byte);
+            for (short x = 0; x < kByteSize; ++x) {
                 byte[x] = 0;
             }
             --j;
-            cur_position = ByteSize - 1;
+            cur_position = kByteSize - 1;
         } else {
             short temporary_value = i % 2;
             i = i / 2;
@@ -58,10 +62,10 @@ int2023_t from_int(int32_t i) {
         }
     }
     if (j > -1) {
-        number.storage[j] += BinToUint(byte);
+        number.bytes[j] += BinToUint(byte);
     }
-    if (number.storage[0] >= NegativeValue) {
-        number.storage[0] -= NegativeValue;
+    if (IsNegative(number.bytes[0])) {
+        number.bytes[0] -= kNegativeValue;
         number = ReversedCode(number);
     }
     return number;
@@ -99,9 +103,9 @@ std::string StrToBin (std::string bits, char digit){
 int2023_t DivideByTwo (int2023_t num){
     int2023_t result;
     int temp = 0;
-    for (int i = 0; i < ArraySize; ++i) {
-        result.storage[i] = (num.storage[i] + NumberSystem * temp) / 2;
-        temp =  num.storage[i] % 2;
+    for (int i = 0; i < kSize; ++i) {
+        result.bytes[i] = (num.bytes[i] + kNumberSystem * temp) / 2;
+        temp =  num.bytes[i] % 2;
     }
     return result;
 }
@@ -109,12 +113,12 @@ int2023_t DivideByTwo (int2023_t num){
 int2023_t from_string(const char* buff) {
     int2023_t number;
     number.Fill();
-    short byte[ByteSize];
-    for (int i = 0; i < ByteSize; ++i) {
+    short byte[kByteSize];
+    for (int i = 0; i < kByteSize; ++i) {
         byte[i] = 0;
     }
     if (buff[0] == '-') {
-        number.storage[0] = NegativeValue;
+        number.bytes[0] = kNegativeValue;
         ++buff;
     }
     int i = 0;
@@ -123,16 +127,16 @@ int2023_t from_string(const char* buff) {
         bits = StrToBin(bits, buff[i]);
         ++i;
     }
-    int j = ArraySize - 1;
-    int cur_position = ByteSize - 1;
+    int j = kSize - 1;
+    int cur_position = kByteSize - 1;
     unsigned long long pointer = 0;
     while (j > -1 and bits[pointer] != '\0') {
         if (cur_position == -1) {
-            number.storage[j] += BinToUint(byte);
-            for (int i = 0; i < ByteSize; ++i) {
+            number.bytes[j] += BinToUint(byte);
+            for (int i = 0; i < kByteSize; ++i) {
                 byte[i] = 0;
             }
-            cur_position = ByteSize - 1;
+            cur_position = kByteSize - 1;
             --j;
         } else {
             if (bits[pointer] == '0') {
@@ -146,10 +150,10 @@ int2023_t from_string(const char* buff) {
 
     }
     if (j > -1) {
-        number.storage[j] += BinToUint(byte);
+        number.bytes[j] += BinToUint(byte);
     }
-    if (number.storage[0] >= NegativeValue) {
-        number.storage[0] -= NegativeValue;
+    if (IsNegative(number.bytes[0])) {
+        number.bytes[0] -= kNegativeValue;
         number = ReversedCode(number);
     }
     return number;
@@ -160,10 +164,10 @@ int2023_t operator+(const int2023_t& lhs, const int2023_t& rhs) {
     result.Fill();
     int temp;
     int overlimit = 0;
-    for (int i = ArraySize - 1; i > -1; --i) {
-        temp = lhs.storage[i] + rhs.storage[i] + overlimit;
-        result.storage[i] = temp % NumberSystem;
-        overlimit = temp / NumberSystem;
+    for (int i = kSize - 1; i > -1; --i) {
+        temp = lhs.bytes[i] + rhs.bytes[i] + overlimit;
+        result.bytes[i] = temp % kNumberSystem;
+        overlimit = temp / kNumberSystem;
     }
     return result;
 }
@@ -185,36 +189,36 @@ int2023_t operator*(const int2023_t& lhs, const int2023_t& rhs) {
     int2023_t temp_lhs = lhs;
     int2023_t temp_rhs = rhs;
     bool is_minus = false;
-    if (lhs.storage[0] < NegativeValue and rhs.storage[0] >= NegativeValue) {
+    if (!IsNegative(lhs.bytes[0]) and IsNegative(rhs.bytes[0])) {
         is_minus = true;
         temp_rhs = ReversedCode(temp_rhs);
     }
-    else if (lhs.storage[0] >= NegativeValue and rhs.storage[0] < NegativeValue) {
+    else if (IsNegative(lhs.bytes[0]) and !IsNegative(rhs.bytes[0])) {
         is_minus = true;
         temp_lhs = ReversedCode(temp_lhs);
     }
-    else if (lhs.storage[0] >= NegativeValue and rhs.storage[0] >= NegativeValue) {
+    else if (IsNegative(lhs.bytes[0]) and IsNegative(rhs.bytes[0])) {
         temp_lhs = ReversedCode(temp_lhs);
         temp_rhs = ReversedCode(temp_rhs);
     }
     result.Fill();
-    int offset = ArraySize - 1;
+    int category = kSize - 1;
     int id;
-    for (int i = ArraySize - 1; i >= 0; --i) {
+    for (int i = kSize - 1; i >= 0; --i) {
         temporary.Fill();
-        id = offset;
-        for (int j = ArraySize - 1; j >= 0; --j) {
-            int value = temp_rhs.storage[i] * temp_lhs.storage[j] + temporary.storage[id];
-            if (value >= NumberSystem) {
-                temporary.storage[id] = value % NumberSystem;
-                temporary.storage[id - 1] = value / NumberSystem;
+        id = category;
+        for (int j = kSize - 1; j >= 0; --j) {
+            int value = temp_rhs.bytes[i] * temp_lhs.bytes[j] + temporary.bytes[id];
+            if (value >= kNumberSystem) {
+                temporary.bytes[id] = value % kNumberSystem;
+                temporary.bytes[id - 1] = value / kNumberSystem;
             } else {
-                temporary.storage[id] = value;
+                temporary.bytes[id] = value;
             }
             --id;
         }
         result = result + temporary;
-        --offset;
+        --category;
     }
     if (is_minus) {
         return ReversedCode(result);
@@ -227,15 +231,15 @@ int2023_t operator/(const int2023_t& lhs, const int2023_t& rhs) {
     int2023_t temp_rhs = rhs;
     int2023_t result;
     bool is_minus = false;
-    if (lhs.storage[0] < NegativeValue and rhs.storage[0] >= NegativeValue) {
+    if (!IsNegative(lhs.bytes[0]) and IsNegative(rhs.bytes[0])) {
         is_minus = true;
         temp_rhs = ReversedCode(temp_rhs);
     }
-    else if (lhs.storage[0] >= NegativeValue and rhs.storage[0] < NegativeValue) {
+    else if (IsNegative(lhs.bytes[0]) and !IsNegative(rhs.bytes[0])) {
         is_minus = true;
         temp_lhs = ReversedCode(temp_lhs);
     }
-    else if (lhs.storage[0] >= NegativeValue and rhs.storage[0] >= NegativeValue) {
+    else if (IsNegative(lhs.bytes[0]) and IsNegative(rhs.bytes[0])) {
         temp_lhs = ReversedCode(temp_lhs);
         temp_rhs = ReversedCode(temp_rhs);
     }
@@ -270,11 +274,11 @@ int2023_t operator/(const int2023_t& lhs, const int2023_t& rhs) {
 }
 
 bool operator>(const int2023_t& lhs, const int2023_t& rhs){
-    for (int i = 0; i < ArraySize; ++i) {
-        if (lhs.storage[i] > rhs.storage[i]) {
+    for (int i = 0; i < kSize; ++i) {
+        if (lhs.bytes[i] > rhs.bytes[i]) {
             return true;
         }
-        else if (lhs.storage[i] < rhs.storage[i]) {
+        else if (lhs.bytes[i] < rhs.bytes[i]) {
             return false;
         }
     }
@@ -286,8 +290,8 @@ bool operator<=(const int2023_t& lhs, const int2023_t& rhs){
 }
 
 bool operator==(const int2023_t& lhs, const int2023_t& rhs){
-    for (int i = 0; i < ArraySize; ++i) {
-        if (lhs.storage[i] != rhs.storage[i]) {
+    for (int i = 0; i < kSize; ++i) {
+        if (lhs.bytes[i] != rhs.bytes[i]) {
             return false;
         }
     }
@@ -295,8 +299,8 @@ bool operator==(const int2023_t& lhs, const int2023_t& rhs){
 }
 
 bool operator!=(const int2023_t& lhs, const int2023_t& rhs) {
-    for (int i = 0; i < ArraySize; ++i) {
-        if (lhs.storage[i] != rhs.storage[i]) {
+    for (int i = 0; i < kSize; ++i) {
+        if (lhs.bytes[i] != rhs.bytes[i]) {
             return true;
         }
     }
@@ -310,17 +314,17 @@ std::ostream& operator<<(std::ostream& stream, const int2023_t& value) {
         stream << 0;
         return stream;
     }
-    if (value.storage[0] >= NegativeValue) {
+    if (IsNegative(value.bytes[0])) {
         stream << "-";
         result = ReversedCode(value);
     }
 
-    for (int i = 0; i < ArraySize; ++i) {
-        if (result.storage[i] != 0) {
+    for (int i = 0; i < kSize; ++i) {
+        if (result.bytes[i] != 0) {
             is_valueable_zeros = true;
         }
         if (is_valueable_zeros) {
-            stream << result.storage[i] + 0 << ' ';
+            stream << result.bytes[i] + 0 << ' ';
         }
 
     }
