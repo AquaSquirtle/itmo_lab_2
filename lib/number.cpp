@@ -2,28 +2,13 @@
 #include <string>
 
 
-bool IsNegative (uint8_t first_byte) {
+bool IsNegative(uint8_t first_byte) {
     return first_byte >= kNegativeValue;
 }
 
-int2023_t ReversedCode (int2023_t num){
-    int2023_t result;
-    for (int i = 0; i < kSize; ++i) {
-        result.bytes[i] = kNumberSystem - num.bytes[i] - 1;
-    }
-    for (int i = kSize - 1; i > -1; --i) {
-        if (result.bytes[i] + 1 > kNumberSystem - 1) {
-            result.bytes[i] = 0;
-        } else {
-            result.bytes[i] += 1;
-            break;
-        }
-    }
-    return result;
 
-}
 
-uint8_t BinToUint(short* byte){
+uint8_t BinToUint(short* byte) {
     uint8_t result = 0;
     for (short i = 0; i < kByteSize; ++i) {
         if (byte[i] == 1) {
@@ -46,7 +31,7 @@ int2023_t from_int(int32_t i) {
     }
     short j = kSize - 1;
     short cur_position = kByteSize-1;
-    while (j > -1 and i > 0) {
+    while (j > -1 && i > 0) {
         if (cur_position == -1) {
             number.bytes[j] += BinToUint(byte);
             for (short x = 0; x < kByteSize; ++x) {
@@ -66,19 +51,19 @@ int2023_t from_int(int32_t i) {
     }
     if (IsNegative(number.bytes[0])) {
         number.bytes[0] -= kNegativeValue;
-        number = ReversedCode(number);
+        number = -number;
     }
     return number;
 }
 
-Result Division (int bit, int digit){
+Result Division(int bit, int digit) {
     Result res;
     res.bit = std::to_string((bit*10+digit)%2);
     res.digit = std::to_string((bit*10+digit)/2);
     return res;
 }
 
-std::string StrToBin (std::string bits, char digit){
+std::string StrToBin(std::string bits, char digit) {
     std::string result_bits;
     Result res;
     res.digit = digit;
@@ -100,7 +85,7 @@ std::string StrToBin (std::string bits, char digit){
     return result_bits;
 }
 
-int2023_t DivideByTwo (int2023_t num){
+int2023_t DivideByTwo(int2023_t num) {
     int2023_t result;
     int temp = 0;
     for (int i = 0; i < kSize; ++i) {
@@ -130,7 +115,7 @@ int2023_t from_string(const char* buff) {
     int j = kSize - 1;
     int cur_position = kByteSize - 1;
     unsigned long long pointer = 0;
-    while (j > -1 and bits[pointer] != '\0') {
+    while (j > -1 && bits[pointer] != '\0') {
         if (cur_position == -1) {
             number.bytes[j] += BinToUint(byte);
             for (int i = 0; i < kByteSize; ++i) {
@@ -154,7 +139,7 @@ int2023_t from_string(const char* buff) {
     }
     if (IsNegative(number.bytes[0])) {
         number.bytes[0] -= kNegativeValue;
-        number = ReversedCode(number);
+        number = -number;
     }
     return number;
 }
@@ -172,15 +157,24 @@ int2023_t operator+(const int2023_t& lhs, const int2023_t& rhs) {
     return result;
 }
 
+int2023_t operator-(const int2023_t& lhs) {
+    int2023_t result;
+    for (int i = 0; i < kSize; ++i) {
+        result.bytes[i] = kNumberSystem - lhs.bytes[i] - 1;
+    }
+    for (int i = kSize - 1; i > -1; --i) {
+        if (result.bytes[i] + 1 > kNumberSystem - 1) {
+            result.bytes[i] = 0;
+        } else {
+            result.bytes[i] += 1;
+            break;
+        }
+    }
+    return result;
+}
+
 int2023_t operator-(const int2023_t& lhs, const int2023_t& rhs) {
-    int2023_t zero = from_int(0);
-    if (rhs == zero) {
-        return lhs + rhs;
-    }
-    else {
-        int2023_t right_numeber = ReversedCode(rhs);
-        return lhs + right_numeber;
-    }
+    return lhs + (-rhs);
 }
 
 int2023_t operator*(const int2023_t& lhs, const int2023_t& rhs) {
@@ -188,18 +182,18 @@ int2023_t operator*(const int2023_t& lhs, const int2023_t& rhs) {
     int2023_t temporary;
     int2023_t temp_lhs = lhs;
     int2023_t temp_rhs = rhs;
-    bool is_minus = false;
-    if (!IsNegative(lhs.bytes[0]) and IsNegative(rhs.bytes[0])) {
-        is_minus = true;
-        temp_rhs = ReversedCode(temp_rhs);
+    bool is_negative = false;
+    if (!IsNegative(lhs.bytes[0]) && IsNegative(rhs.bytes[0])) {
+        is_negative = true;
+        temp_rhs = -temp_rhs;
     }
-    else if (IsNegative(lhs.bytes[0]) and !IsNegative(rhs.bytes[0])) {
-        is_minus = true;
-        temp_lhs = ReversedCode(temp_lhs);
+    else if (IsNegative(lhs.bytes[0]) && !IsNegative(rhs.bytes[0])) {
+        is_negative = true;
+        temp_lhs = -temp_lhs;
     }
-    else if (IsNegative(lhs.bytes[0]) and IsNegative(rhs.bytes[0])) {
-        temp_lhs = ReversedCode(temp_lhs);
-        temp_rhs = ReversedCode(temp_rhs);
+    else if (IsNegative(lhs.bytes[0]) && IsNegative(rhs.bytes[0])) {
+        temp_lhs = -temp_lhs;
+        temp_rhs = -temp_rhs;
     }
     result.Fill();
     int category = kSize - 1;
@@ -220,32 +214,29 @@ int2023_t operator*(const int2023_t& lhs, const int2023_t& rhs) {
         result = result + temporary;
         --category;
     }
-    if (is_minus) {
-        return ReversedCode(result);
-    }
-    return result;
+    return is_negative ? -result : result;
 }
 
 int2023_t operator/(const int2023_t& lhs, const int2023_t& rhs) {
     int2023_t temp_lhs = lhs;
     int2023_t temp_rhs = rhs;
     int2023_t result;
-    bool is_minus = false;
-    if (!IsNegative(lhs.bytes[0]) and IsNegative(rhs.bytes[0])) {
-        is_minus = true;
-        temp_rhs = ReversedCode(temp_rhs);
+    bool is_negative = false;
+    if (!IsNegative(lhs.bytes[0]) && IsNegative(rhs.bytes[0])) {
+        is_negative = true;
+        temp_rhs = -temp_rhs;
     }
-    else if (IsNegative(lhs.bytes[0]) and !IsNegative(rhs.bytes[0])) {
-        is_minus = true;
-        temp_lhs = ReversedCode(temp_lhs);
+    else if (IsNegative(lhs.bytes[0]) && !IsNegative(rhs.bytes[0])) {
+        is_negative = true;
+        temp_lhs = -temp_lhs;
     }
-    else if (IsNegative(lhs.bytes[0]) and IsNegative(rhs.bytes[0])) {
-        temp_lhs = ReversedCode(temp_lhs);
-        temp_rhs = ReversedCode(temp_rhs);
+    else if (IsNegative(lhs.bytes[0]) && IsNegative(rhs.bytes[0])) {
+        temp_lhs = -temp_lhs;
+        temp_rhs = -temp_rhs;
     }
     if (temp_rhs == from_int(1)){
-        if (is_minus) {
-            return ReversedCode(temp_lhs);
+        if (is_negative) {
+            return -temp_lhs;
         } else {
             return temp_lhs;
         }
@@ -267,13 +258,10 @@ int2023_t operator/(const int2023_t& lhs, const int2023_t& rhs) {
         }
 
     }
-    if (is_minus) {
-        return ReversedCode(result);
-    }
-    return result;
+    return is_negative ? -result : result;
 }
 
-bool operator>(const int2023_t& lhs, const int2023_t& rhs){
+bool operator>(const int2023_t& lhs, const int2023_t& rhs) {
     for (int i = 0; i < kSize; ++i) {
         if (lhs.bytes[i] > rhs.bytes[i]) {
             return true;
@@ -285,11 +273,11 @@ bool operator>(const int2023_t& lhs, const int2023_t& rhs){
     return false;
 }
 
-bool operator<=(const int2023_t& lhs, const int2023_t& rhs){
-    return (!(lhs > rhs));
+bool operator<=(const int2023_t& lhs, const int2023_t& rhs) {
+    return !(lhs > rhs);
 }
 
-bool operator==(const int2023_t& lhs, const int2023_t& rhs){
+bool operator==(const int2023_t& lhs, const int2023_t& rhs) {
     for (int i = 0; i < kSize; ++i) {
         if (lhs.bytes[i] != rhs.bytes[i]) {
             return false;
@@ -299,12 +287,7 @@ bool operator==(const int2023_t& lhs, const int2023_t& rhs){
 }
 
 bool operator!=(const int2023_t& lhs, const int2023_t& rhs) {
-    for (int i = 0; i < kSize; ++i) {
-        if (lhs.bytes[i] != rhs.bytes[i]) {
-            return true;
-        }
-    }
-    return false;
+    return !(lhs == rhs);
 }
 
 std::ostream& operator<<(std::ostream& stream, const int2023_t& value) {
@@ -316,7 +299,7 @@ std::ostream& operator<<(std::ostream& stream, const int2023_t& value) {
     }
     if (IsNegative(value.bytes[0])) {
         stream << "-";
-        result = ReversedCode(value);
+        result = -value;
     }
 
     for (int i = 0; i < kSize; ++i) {
